@@ -10,11 +10,12 @@ COPY package*.json .
 # B4: Cài đặt các dependency bằng Yarn
 RUN yarn install
 
-RUN yarn prisma generate --schema src/prisma/schema.prisma
+
 
 # B3.2: Copy source code vào trong image
 COPY . .
 
+RUN yarn prisma generate --schema src/prisma/schema.prisma
 
 RUN yarn run build
 # B5: Expose port cho bên ngoài kết nối tới
