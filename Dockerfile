@@ -17,7 +17,7 @@ COPY . .
 RUN yarn install
 
 # B5: Expose port cho bên ngoài kết nối tới
-EXPOSE 8080
+EXPOSE 8083
 
 # B6: Start server trong image
 CMD ["yarn", "start:prod"]
