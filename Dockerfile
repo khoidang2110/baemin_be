@@ -2,22 +2,23 @@
 FROM node:20
 
 # B2: Tạo folder BE
-WORKDIR /app
+WORKDIR /root/app
 
 # B3: Copy file package.json và yarn.lock
-COPY package.json yarn.lock ./
-
-# B3.1: Copy folder prisma vào folder prisma trong image
-# COPY prisma ./prisma/
-
-# B3.2: Copy source code vào trong image
-COPY . .
+COPY package*.json .
 
 # B4: Cài đặt các dependency bằng Yarn
 RUN yarn install
 
+RUN yarn prisma generate --schema src/prisma/schema.prisma
+
+# B3.2: Copy source code vào trong image
+COPY . .
+
+
+RUN yarn run build
 # B5: Expose port cho bên ngoài kết nối tới
 EXPOSE 8083
 
 # B6: Start server trong image
-CMD ["yarn", "start:prod"]
+CMD ["yarn", "dist/src/main"]
