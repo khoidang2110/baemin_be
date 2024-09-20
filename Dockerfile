@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package.json yarn.lock ./
 
 # B3.1: Copy folder prisma vào folder prisma trong image
-COPY prisma ./prisma/
+# COPY prisma ./prisma/
 
 # B3.2: Copy source code vào trong image
 COPY . .
