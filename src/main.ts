@@ -37,12 +37,9 @@ async function bootstrap() {
   
   // CORS
   const allowedOrigins = [
-    'https://easybadwork-fe.vercel.app',
+    'https://baemin-fe.vercel.app',
     'http://localhost:3000',
-    'http://14.225.218.217:3000',
-    'https://easybadwork.com', 
-    'https://www.easybadwork.com', 
-    'https://api.easybadwork.com',
+  
   ];
 
   const corsOptions = {
