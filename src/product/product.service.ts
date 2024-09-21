@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { User } from 'src/decorators/user.decorator';
 import { v4 as uuidv4 } from 'uuid';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { OrderCartDTO, OrderDTO } from './dto/order.dto';
 //import { Prisma } from '@prisma/client';
 
