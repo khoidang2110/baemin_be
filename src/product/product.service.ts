@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { User } from 'src/decorators/user.decorator';
 import { v4 as uuidv4 } from 'uuid';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaClient } from '@prisma/client';
 import { OrderCartDTO, OrderDTO } from './dto/order.dto';
 //import { Prisma } from '@prisma/client';
 
@@ -10,9 +10,9 @@ export class ProductService {
 
 
 constructor(
-    private prismaService: PrismaService
+   // private prismaService: PrismaService
 ){}
-
+prismaService = new PrismaClient();
 async getProduct() {
     let data = await this.prismaService.product.findMany({
       include: {

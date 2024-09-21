@@ -6,19 +6,19 @@ WORKDIR /app
 
 COPY package*.json ./
 
-
-
 RUN yarn install
+
+#COPY prisma ./prisma/
 
 
 COPY . .
 
-RUN yarn prisma generate --schema src/prisma/schema.prisma
+RUN yarn prisma generate
 
-# RUN yarn run build
+RUN yarn run build
 
 EXPOSE 8083
 
-#CMD ["node", "dist/main"]
+CMD ["yarn", "run","start:prod"]
 
-CMD ["yarn","run", "start"]
+#CMD ["yarn","run", "start"]
