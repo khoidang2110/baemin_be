@@ -55,6 +55,9 @@ jobs:
             # Run new container on port 8096
             docker run -e --restart=always -d -p 8096:8096 --name bm_nest_8096 bm_be_8096
             
+             # Ensure the new container is running before stopping the old one
+            sleep 5
+            
             # Stop and remove the old container bm_nest_8097 if it exists
             docker stop bm_nest_8097 || true
             docker rm bm_nest_8097 || true
