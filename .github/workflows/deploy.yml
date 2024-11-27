@@ -26,47 +26,36 @@ jobs:
         sshpass -p $PASS ssh -o StrictHostKeyChecking=no $VPS_USER@$VPS_IP << EOF
           cd /home/$VPS_USER
           
-          # Clone repo if it doesn't exist, otherwise pull latest code
-          if [ ! -d "baemin_be" ]; then
+         
             git clone https://github.com/khoidang2110/baemin_be.git
-          fi
+          
           cd baemin_be || exit
 
-          # Pull latest code (if repo exists)
-          git pull origin main
 
           # Check if container bm_nest_8096 is running
           if docker ps --filter "name=bm_nest_8096" --format "{{.Names}}" | grep -q "bm_nest_8096"; then
             # If bm_nest_8096 is running, create bm_nest_8097 from image bm_be_8097
-            TARGET_PORT=8097
-            TARGET_NAME=bm_nest_8097
-            IMAGE_NAME=bm_be_8097
-
             # Build image bm_be_8097 if not already built
-            docker build -t $IMAGE_NAME .
-          else
-            # If bm_nest_8096 is not running, create bm_nest_8096 from image bm_be_8096
-            TARGET_PORT=8096
-            TARGET_NAME=bm_nest_8096
-            IMAGE_NAME=bm_be_8096
+            docker build -t bm_be_8097 .
+            
+            # Run new container on port 8097
+            docker run -e --restart=always -d -p 8097:8096 --name bm_nest_8097 bm_be_8097
+            
+            # Ensure the new container is running before stopping the old one
+            sleep 5
 
-            # Build image bm_be_8096 if not already built
-            docker build -t $IMAGE_NAME .
-          fi
-
-          # Run new container with the determined name and port
-          docker run -e --restart=always -d -p $TARGET_PORT:8096 --name $TARGET_NAME $IMAGE_NAME
-          
-          # Ensure the new container is running before stopping the old one
-          sleep 5
-
-          # Stop and remove the old container if it exists
-          if docker ps --filter "name=bm_nest_8096" --format "{{.Names}}" | grep -q "bm_nest_8096"; then
+            # Stop and remove the old container if it exists
             docker stop bm_nest_8096 || true
             docker rm bm_nest_8096 || true
-          fi
-          
-          if docker ps --filter "name=bm_nest_8097" --format "{{.Names}}" | grep -q "bm_nest_8097"; then
+          else
+            # If bm_nest_8096 is not running, create bm_nest_8096 from image bm_be_8096
+            # Build image bm_be_8096 if not already built
+            docker build -t bm_be_8096 .
+            
+            # Run new container on port 8096
+            docker run -e --restart=always -d -p 8096:8096 --name bm_nest_8096 bm_be_8096
+            
+            # Stop and remove the old container bm_nest_8097 if it exists
             docker stop bm_nest_8097 || true
             docker rm bm_nest_8097 || true
           fi
