@@ -11,10 +11,16 @@ export class AuthController {
 
 
   @Post('/login')
-  @ApiQuery({ name: 'email', type: 'string', required: false, description: 'Email of the user' }) 
-  @ApiQuery({ name: 'password', type: 'string', required: false, description: 'Password of the user' }) 
-  login(@Query('email') email: string, @Query('password') password: string) {
-    return this.authService.login(email, password);
+
+  @ApiBody({ schema: { 
+    type: 'object', 
+    properties: { 
+      email: { type: 'string' },
+      password: { type: 'string' }
+    },
+  }})
+  login(@Body() body: { email: string, password: string }) {
+    return this.authService.login(body.email, body.password);
   }
  
 

@@ -27,10 +27,14 @@ prismaService = new PrismaClient();
       email:email
     }
   })
+
+
   if(checkUser){
     // nếu user tồn tại trong DB => check password ( bcrypt)
     // npm i bcrypt @types/bcrypt
     //ss 2 pass 
+    console.log("pass input",password)
+    console.log("pass db", checkUser.password)
     let isCorrectPass = bcrypt.compareSync(password,checkUser.password);
     if(isCorrectPass){
       let payload = {
