@@ -67,8 +67,8 @@ async function bootstrap() {
   SwaggerModule.setup("/swagger", app, document);
 
   // Start server
-  await app.listen(8083);
-  console.log(`BE starting with port 8083`);
+  await app.listen(8096);
+  console.log(`BE starting with port 8096`);
 }
 
 bootstrap();

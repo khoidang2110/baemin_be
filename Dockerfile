@@ -17,7 +17,7 @@ RUN yarn prisma generate
 
 RUN yarn run build
 
-EXPOSE 8083
+EXPOSE 8096
 
 CMD ["yarn", "run","start:prod"]
 
