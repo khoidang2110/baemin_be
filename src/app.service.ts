@@ -15,6 +15,6 @@ export class AppService {
 //   memoryLoad[i] = Math.random();
 // }     
 
-return 'zero downtime deployment1 -v1.0 test 56 ';
+return 'zero downtime deployment1 -v1.0 test 88 ';
   }
 }
