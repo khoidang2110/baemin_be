@@ -34,10 +34,9 @@ jobs:
             git clone https://github.com/khoidang2110/baemin_be.git
           fi
           cd baemin_be || exit
-          
-       
 
-        
+          # Pull latest code (nếu đã có repo)
+          git pull origin main
 
           # Kiểm tra xem container bm_nest_8096 đã chạy chưa
           if docker ps --filter "name=bm_nest_8096" --format "{{.Names}}" | grep -q "bm_nest_8096"; then
@@ -65,12 +64,9 @@ jobs:
           sleep 5
 
           # Dừng và xóa container cũ nếu tồn tại
-          if [ "$TARGET_PORT" -eq 8097 ]; then
-            docker stop bm_nest_8096 || true
-            docker rm bm_nest_8096 || true
-          else
-            docker stop bm_nest_8097 || true
-            docker rm bm_nest_8097 || true
+          if docker ps --filter "name=$TARGET_NAME" --format "{{.Names}}" | grep -q "$TARGET_NAME"; then
+            docker stop $TARGET_NAME || true
+            docker rm $TARGET_NAME || true
           fi
 
           # Xóa các images cũ không còn sử dụng
