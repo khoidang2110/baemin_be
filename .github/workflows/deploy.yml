@@ -45,6 +45,6 @@ jobs:
           docker run -e --restart=always -d -p 8096:8096 --name bm_nest bm_be
            # Clean up by removing the cloned repository files
           cd ..
-          rm -rf bm_be
+          rm -rf baemin_be
         EOF
 
