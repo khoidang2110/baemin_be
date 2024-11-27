@@ -39,27 +39,39 @@ jobs:
           git reset --hard
           git pull
 
-          # Build Docker image mới
-          docker build -t bm_be .
-
-          # Kiểm tra và quyết định cổng (Blue-Green deployment)
+          # Kiểm tra xem container bm_nest_8096 đã chạy chưa
           if docker ps --filter "name=bm_nest_8096" --format "{{.Names}}" | grep -q "bm_nest_8096"; then
+            # Nếu bm_nest_8096 đã chạy, ta sẽ tạo bm_nest_8097 từ image bm_be_8097
             TARGET_PORT=8097
             TARGET_NAME=bm_nest_8097
+            IMAGE_NAME=bm_be_8097
+
+            # Build image bm_be_8097
+            docker build -t $IMAGE_NAME .
           else
+            # Nếu bm_nest_8096 chưa chạy, ta sẽ tạo bm_nest_8096 từ image bm_be_8096
             TARGET_PORT=8096
             TARGET_NAME=bm_nest_8096
+            IMAGE_NAME=bm_be_8096
+
+            # Build image bm_be_8096
+            docker build -t $IMAGE_NAME .
           fi
 
-          # Tạo container mới trên cổng xác định trước khi dừng container cũ
-          docker run -e --restart=always -d -p $TARGET_PORT:8096 --name $TARGET_NAME bm_be
-
+          # Tạo container mới trên cổng xác định
+          docker run -e --restart=always -d -p $TARGET_PORT:8096 --name $TARGET_NAME $IMAGE_NAME
+          
           # Đảm bảo container mới đã chạy trước khi dừng container cũ
           sleep 5
 
           # Dừng và xóa container cũ nếu tồn tại
-          docker stop bm_nest_$(if [ $TARGET_PORT -eq 8096 ]; then echo "8097"; else echo "8096"; fi) || true
-          docker rm bm_nest_$(if [ $TARGET_PORT -eq 8096 ]; then echo "8097"; else echo "8096"; fi) || true
+          if [ "$TARGET_PORT" -eq 8097 ]; then
+            docker stop bm_nest_8096 || true
+            docker rm bm_nest_8096 || true
+          else
+            docker stop bm_nest_8097 || true
+            docker rm bm_nest_8097 || true
+          fi
 
           # Xóa các images cũ không còn sử dụng
           docker image prune -f
